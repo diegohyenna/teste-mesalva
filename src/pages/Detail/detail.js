@@ -27,7 +27,7 @@ export default (props) => {
 
   return (
     <Colx12>
-      <Card style={{ textAlign: "center" }}>
+      <Card>
         {loading && <Loading></Loading>}
         {!loading && (
           <React.Fragment>
@@ -38,10 +38,12 @@ export default (props) => {
               {detail.title}
             </Title>
 
-            <Date>{dayjs(detail.date).format("DD/MM/YYYY")}</Date>
+            <Date align="center">
+              {dayjs(detail.date).format("DD/MM/YYYY")}
+            </Date>
             <hr />
             <Text>{detail.explanation}</Text>
-            <Link component={Button} to={`/`}>
+            <Link component={Button} type="danger" to={`/`}>
               Voltar
             </Link>
           </React.Fragment>

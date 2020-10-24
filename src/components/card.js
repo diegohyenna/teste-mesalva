@@ -6,6 +6,7 @@ export const Card = styled.div`
   padding: 10px;
   margin: 10px;
   border-radius: 5px;
+  position: relative;
 `;
 
 export default ({ children }) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 
 import { Title } from "./styles";
 
@@ -15,38 +15,64 @@ import {
   Colx4,
   Colx2,
   SearchButton,
+  Alert,
 } from "../../styles";
+
 import Loading from "../../components/loading";
+
+import { inverseDate, sanitarizeDate } from "../../helpers/helper";
+
+import InputMask from "react-input-mask";
 
 export default (props) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [imageDetails, setImageDetails] = useState([]);
-  const [search, setSearch] = useState("");
+  const [date, setDate] = useState("");
   const [countImages, setCountImages] = useState("");
+  const [error, setError] = useState("");
 
-  const onSearch = (evt) => {
-    setSearch(evt.target.value);
+  const onDate = (evt) => {
+    setDate(evt.target.value);
   };
 
   const onCountImages = (evt) => {
     setCountImages(evt.target.value);
   };
 
-  const onSubmit = (search, countImages) => {
-    console.log(search);
-    console.log(Date.now(search));
-    console.log(countImages);
-    search = Date.now(search);
-    getImages(search, countImages);
+  const onSubmit = (date, countImages) => {
+    setError("");
+    if (!date) {
+      setError({
+        attr: "date",
+        message: "O campo de data precisa ser preenchido!",
+      });
+      return;
+    } else if (sanitarizeDate(date).length < 8) {
+      setError({
+        attr: "date",
+        message: "O campo de data contém uma data inválida",
+      });
+      return;
+    } else if (!countImages) {
+      setError({
+        attr: "countImages",
+        message:
+          "Precisa ser informada uma quantidade de imagens para pesquisar!",
+      });
+      return;
+    }
+    getImages(dayjs(inverseDate(date)), countImages);
   };
 
   const getImages = async (date, countImages) => {
-    setItems([]);
-    setImageDetails([]);
     let index = countImages;
     let searchDate = dayjs(date);
+
+    setItems([]);
+    setImageDetails([]);
     setLoading(true);
+
     while (index > 0) {
       await APIgetImages(searchDate.format("YYYY-MM-DD"))
         .then((result) => {
@@ -54,18 +80,21 @@ export default (props) => {
             imageDetails.push(result);
           } else if (result.error) {
             index = 0;
+            setError({
+              attr: "search",
+              message:
+                "Aconteceu algum problema, verifique se as informações nos campos estão corretas e tente novamente!",
+            });
             return;
           } else {
             index++;
           }
         })
         .catch((error) => {
-          console.log(error);
           index = 0;
         });
 
       searchDate = searchDate.subtract(1, "day");
-      console.log(index);
       index--;
     }
     setItems(imageDetails);
@@ -79,27 +108,33 @@ export default (props) => {
           <Colx12>
             <Title align="center">Galeria de Imagens</Title>
             <Row>
-              <Colx6>
-                <input
-                  type="text"
-                  name="search"
+              <Colx6 sm={"100%"}>
+                <InputMask
+                  mask="99/99/9999"
+                  name="date"
                   placeholder="Pesquise aqui por uma data (dd/mm/yyyy)"
-                  value="23/10/2020"
-                  onChange={onSearch}
-                />
+                  onChange={onDate}
+                  value={date}
+                ></InputMask>
+                {error && error["attr"] === "date" && (
+                  <Alert>{error["message"]}</Alert>
+                )}
               </Colx6>
-              <Colx4>
+              <Colx4 sm={"100%"}>
                 <select onChange={onCountImages}>
-                  <option value>Quantidade a pesquisar</option>
+                  <option value>Quantidade de imagens</option>
                   <option>5</option>
                   <option>10</option>
                   <option>15</option>
                   <option>20</option>
                   <option>25</option>
                 </select>
+                {error && error["attr"] === "countImages" && (
+                  <Alert>{error["message"]}</Alert>
+                )}
               </Colx4>
-              <Colx2>
-                <SearchButton onClick={() => onSubmit(search, countImages)}>
+              <Colx2 sm={"100%"}>
+                <SearchButton onClick={() => onSubmit(date, countImages)}>
                   Pesquisar
                 </SearchButton>
               </Colx2>
@@ -109,6 +144,9 @@ export default (props) => {
       </Jumbotron>
       <Row>
         <Colx12>
+          {error && error["attr"] === "search" && (
+            <Alert>{error["message"]}</Alert>
+          )}
           {loading && <Loading></Loading>}
           {!loading && <Gallery props={props} items={items}></Gallery>}
         </Colx12>

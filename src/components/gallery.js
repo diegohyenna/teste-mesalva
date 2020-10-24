@@ -16,7 +16,7 @@ export default ({ props, items }) => {
     <Row style={{ marginTop: "50px" }}>
       {items &&
         items.map((item, index) => (
-          <Colx4 key={index}>
+          <Colx4 sm={"100%"} key={index}>
             <Card>
               <Image imageUrl={item.url}></Image>
               <Title type="subtitle">{item.title}</Title>

@@ -1,3 +1,4 @@
+import { queries } from "@testing-library/react";
 import styled from "styled-components";
 import { createGlobalStyle } from "styled-components";
 
@@ -31,10 +32,13 @@ export const GlobalStyle = createGlobalStyle`
 
   input::placeholder {
     color: gray;
-    font-weight: bold;
   }
 
   input:focus {
+    border: 2px solid orange;
+  }
+
+  select:focus {
     border: 2px solid orange;
   }
 
@@ -70,6 +74,12 @@ export const Row = styled.div`
 
 const Col = styled.div`
   padding: 0 10px;
+  ${(props) =>
+    props.sm
+      ? `@media all and (max-width: 768px){
+      width: ${props.sm} !important;
+  }`
+      : ""}
 `;
 
 export const Colx1 = styled(Col)`
@@ -147,6 +157,8 @@ export const Button = styled.a`
   ${(props) =>
     props.type === "primary"
       ? "background-color: dodgerblue; color: white;"
+      : props.type === "danger"
+      ? "background-color: #ff005a; color: white;"
       : "background-color: white; color: gray; border: 1px solid gainsboro;"}
   width: 100%;
   margin-top: 10px;
@@ -161,14 +173,14 @@ export const Button = styled.a`
 
 export const SearchButton = styled.button`
   width: 100%;
-  height: calc(100% - 20px);
+  height: 40px;
   padding: 5px;
   margin: 10px 0px;
   background-color: blueviolet;
   color: white;
   font-size: 17px;
   font-weight: 800;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   border-radius: 5px;
 `;
 
@@ -177,10 +189,28 @@ export const Date = styled.p`
   font-size: 12px;
   color: dodgerblue;
   margin-bottom: 20px;
+
+  text-align: ${(props) =>
+    props.align === "center"
+      ? "center"
+      : props.align === "left"
+      ? "left"
+      : props.align === "right"
+      ? "right"
+      : "left"};
 `;
 
 export const Text = styled.p`
   font-size: 14px;
   margin-top: 20px;
   color: gray;
+`;
+
+export const Alert = styled.div`
+  background-color: #ffd8e6;
+  color: #ff005a;
+  padding: 2px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 4px;
 `;
