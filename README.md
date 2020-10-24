@@ -17,10 +17,7 @@ Um teste com tecnologias frontend para a uma vaga na empresa Me Salva.
 Na pasta raiz rodar:
 `npm install`
 
-Depois
-`npm start`
-
-É preciso ter o create-react-app instalado
+É preciso ter o create-react-app instalado:
 `npm start`
 
 ## Demonstração
