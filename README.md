@@ -10,6 +10,7 @@ Um teste com tecnologias frontend para a uma vaga na empresa Me Salva.
     - Axios
     - React Router DOM
     - DayJs
+    - React input mask
 
 ## Rodando localmente
 
