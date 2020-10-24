@@ -20,6 +20,9 @@ Na pasta raiz rodar:
 Depois
 `npm start`
 
+É preciso ter o create-react-app instalado
+`npm start`
+
 ## Demonstração
 
 [Visitar aqui](https://teste-mesalva.web.app)
